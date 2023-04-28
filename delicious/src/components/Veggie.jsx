@@ -3,31 +3,31 @@ import styled from "styled-components";
 import {Splide, SplideSlide} from '@splidejs/react-splide';
 import '@splidejs/splide/dist/css/splide.min.css';
 
-function Popular() {
+function Veggie() {
 
-  const [popular, setPopular] = useState([]);
+  const [veggie, setVeggie] = useState([]);
 
-  //running getPopular has soon as the component gets mounted => []
+  //running getVeggiehas soon as the component gets mounted => []
   useEffect(() => {
-    getPopular();
+    getVeggie();
   },[]);
 
   //get data
-  const getPopular = async () => {
+  const getVeggie = async () => {
     //see if there's anything in our local storage; if not fetch it
     //so we don't max out the API resources
-    const check = localStorage.getItem('popular');
+    const check = localStorage.getItem('veggie');
 
     if(check){
       //parsing back from string to array
-      setPopular(JSON.parse(check));
+      setVeggie(JSON.parse(check));
     }else{
-      const api = await fetch(`https://api.spoonacular.com/recipes/random?apiKey=${process.env.REACT_APP_API_KEY}&number=10`);
+      const api = await fetch(`https://api.spoonacular.com/recipes/random?apiKey=${process.env.REACT_APP_API_KEY}&number=10&tags=vegetarian`);
       const data = await api.json();
       
       //local storage only saves strings, that's why we're using stringify
-      localStorage.setItem('popular', JSON.stringify(data.recipes));
-      setPopular(data.recipes);
+      localStorage.setItem('veggie', JSON.stringify(data.recipes));
+      setVeggie(data.recipes);
       console.log(data.recipes);
     }
   }
@@ -35,15 +35,15 @@ function Popular() {
   return (
     <div>
       <Wrapper>
-        <h3>Popular Picks</h3>
+        <h3>Vegetarian Picks</h3>
         <Splide options={{
-          perPage: 4,
+          perPage: 3,
           arrows: false,
           pagination: false,
           drag: "free",
           gap: '5rem',
         }}>
-        {popular.map((recipe) => {
+        {veggie.map((recipe) => {
           return(
             <SplideSlide key={recipe.id}>
               <Card>
@@ -104,4 +104,4 @@ const Gradient = styled.div`
   background: linear-gradient(rgba(0,0,0,0), rgba(0,0,0,0.5))
 `
 
-export default Popular;
+export default Veggie;
